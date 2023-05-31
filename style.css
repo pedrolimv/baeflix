@@ -789,7 +789,7 @@ header#main-header.menu-sticky{
 
 /* FUNDO FUNDO FUNDO*/
 #home-slider .slick-bg.s-bg-1{
-    background-image: url(images/capa/.jpg); /*MUDAR FUNDO*/
+    background-image: url(images/capa/2023.jpg); /*MUDAR FUNDO*/
 }
 
 .slick-bg::before{
