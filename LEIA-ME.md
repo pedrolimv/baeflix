@@ -34,6 +34,17 @@ O banner grande usa `destaque` (hoje: Simplesmente Acontece, com o título escri
 - **Days Before the Day** (Em breve, estreia 10/05/2027): quando estrear, coloque `videos/days-before-the-day.mp4`
   e mova o item de `emBreve` para `videos` em `dados.js`.
 
+## Publicado
+**https://pedrolimv.github.io/baeflix/** (repositório público `pedrolimv/baeflix`, GitHub Pages na branch `main`).
+
+Para atualizar depois de mudar algo (no terminal, dentro desta pasta):
+```
+git add -A
+git commit -m "Atualiza Baeflix"
+git push
+```
+O site atualiza sozinho em 1–2 minutos.
+
 ## Como abrir
 - **No computador:** dê dois cliques em `index.html`.
 - **Online (para abrir no celular/TV dela):** arraste a pasta inteira no [Netlify Drop](https://app.netlify.com/drop)
