@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Início - Baeflix</title>
+  <link rel="icon" type="image/svg+xml" href="imagens/logo/baeflix-b.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Dancing+Script:wght@700&family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/estilo.css">
+</head>
+<body class="pg-browse">
+  <div class="top-glow"></div>
+
+  <header class="nav" id="nav">
+    <a href="inicio.html" class="logo" data-logo></a>
+    <button class="nav-browse" id="navBrowse"><span id="navLabel">Início</span><span id="navCaret"></span></button>
+    <nav class="nav-links" id="navLinks">
+      <a data-view="inicio" class="active">Início</a>
+      <a data-view="series">Séries</a>
+      <a data-view="filmes">Filmes</a>
+      <a data-view="jogos">Jogos</a>
+      <a data-view="bombando">Bombando</a>
+      <a data-view="lista">Minha Baeflix</a>
+      <a data-view="idiomas">Navegar por idiomas</a>
+      <button class="nav-close" id="navClose" aria-label="Fechar menu"></button>
+    </nav>
+    <div class="nav-right">
+      <div class="search" id="search">
+        <button class="ic-btn" id="searchBtn" aria-label="Buscar"></button>
+        <input id="searchInput" type="text" placeholder="Títulos, pessoas, gêneros" aria-label="Buscar">
+      </div>
+      <div class="menu bell" id="bellMenu">
+        <button class="ic-btn" data-toggle aria-label="Notificações"><span id="bellIc"></span><span class="badge-n" id="bellBadge">1</span></button>
+        <div class="dropdown" id="bellDrop"></div>
+      </div>
+      <div class="menu" id="profMenu">
+        <button class="prof-btn" data-toggle aria-label="Perfil"><span class="avatar sm" id="profAvatar"></span><span id="profCaret"></span></button>
+        <div class="dropdown" id="profDrop"></div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero" id="hero"></section>
+    <div class="rows" id="rows"></div>
+    <section class="grade" id="grade" hidden></section>
+  </main>
+
+  <footer class="b-footer">
+    <div class="foot-links" id="footLinks">
+      <a>Audiodescrição</a><a>Central de Ajuda</a><a>Cartão pré-pago</a><a>Imprensa</a>
+      <a>Relações com investidores</a><a>Carreiras</a><a>Termos de Uso</a><a>Privacidade</a>
+      <a>Avisos legais</a><a>Preferências de cookies</a><a>Informações corporativas</a><a>Entre em contato</a>
+    </div>
+    <span class="svc" id="svc">Código do serviço</span>
+    <p id="copy">© 2022-2026 Baeflix, Inc. Feito com amor por Pedro.</p>
+  </footer>
+
+  <div class="hover-card" id="hoverCard"></div>
+  <div class="det-ov" id="modal" hidden></div>
+  <div class="player" id="player" hidden></div>
+
+  <script src="js/dados.js"></script>
+  <script src="js/comum.js"></script>
+  <script src="js/inicio.js"></script>
+</body>
+</html>

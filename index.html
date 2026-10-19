@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Baeflix Brasil – Assistir a nós dois online</title>
+  <link rel="icon" type="image/svg+xml" href="imagens/logo/baeflix-b.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Dancing+Script:wght@700&family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/estilo.css">
+</head>
+<body class="pg-landing">
+
+  <div class="lp-hero">
+    <div class="lp-wall" id="wall" aria-hidden="true"></div>
+    <div class="lp-shade"></div>
+
+    <header class="lp-header container">
+      <a href="index.html" class="logo lg" data-logo></a>
+      <div class="lp-actions">
+        <label class="lang" id="langTop"></label>
+        <a href="login.html" class="btn-red sm">Entrar</a>
+      </div>
+    </header>
+
+    <div class="lp-content">
+      <h1 id="headline">Amor ilimitado a partir de 22/10/2022</h1>
+      <p>Novidades todos os dias. Cancele nunca.</p>
+    </div>
+
+    <div class="lp-curve"><i></i></div>
+  </div>
+
+  <main class="container">
+    <section class="lp-banner">
+      <div class="lp-pop" aria-hidden="true">🍿</div>
+      <div class="lp-card">
+        <div>
+          <h3>A Baeflix que você adora por apenas um beijo.</h3>
+          <p>Aproveite nossa opção mais romântica, o plano com abraços.</p>
+        </div>
+        <button class="btn-gray" id="saibaMais">Saiba mais</button>
+      </div>
+    </section>
+
+    <section class="lp-sec">
+      <h2>Em alta</h2>
+      <div class="lp-trend" id="trend"></div>
+    </section>
+
+    <section class="lp-sec">
+      <h2>Mais motivos para assistir</h2>
+      <div class="lp-reasons">
+        <div class="lp-reason"><h3>Assista abraçadinhos</h3><p>No sofá, na cama ou no celular, de preferência com pipoca e cobertor.</p><span>🛋️</span></div>
+        <div class="lp-reason"><h3>Reviva quantas vezes quiser</h3><p>Todos os nossos momentos guardados num só lugar, sem prazo de validade.</p><span>🔁</span></div>
+        <div class="lp-reason"><h3>Perfis só nossos</h3><p>Um perfil pra você, outro pra mim. E a mesma história nos dois.</p><span>💑</span></div>
+        <div class="lp-reason"><h3>Novos episódios todos os dias</h3><p>A temporada atual está sendo gravada agora mesmo, ao vivo, com você.</p><span>🎬</span></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer container">
+    <p class="q">Dúvidas? Fale com o Pedro (atendimento 24h, beijo incluso)</p>
+    <div class="foot-links" id="footLinks">
+      <a>Perguntas frequentes</a><a>Central de Ajuda</a><a>Conta</a><a>Media Center</a>
+      <a>Relações com investidores</a><a>Carreiras</a><a>Formas de assistir</a><a>Termos de Uso</a>
+      <a>Privacidade</a><a>Preferências de cookies</a><a>Informações corporativas</a><a>Entre em contato</a>
+    </div>
+    <label class="lang" id="langFoot"></label>
+    <p class="copy">Baeflix Brasil</p>
+  </footer>
+
+  <script src="js/dados.js"></script>
+  <script src="js/comum.js"></script>
+  <script>
+    (function () {
+      const D = BAEFLIX, B = Baeflix;
+      const { dias, anos } = B.juntos();
+
+      document.getElementById('headline').textContent = `Amor ilimitado a partir de ${B.dataCurta(D.inicioNamoro)}`;
+
+      // seletor de idioma
+      const lang = `${B.icon('lang')}<select aria-label="Idioma"><option>Português</option><option>English</option></select>${B.icon('caret', 'caret')}`;
+      ['langTop', 'langFoot'].forEach(id => {
+        const el = document.getElementById(id);
+        el.innerHTML = lang;
+        el.querySelector('select').addEventListener('change', e => {
+          if (e.target.value !== 'Português') { B.toast('Aqui só se fala a língua do amor ❤'); e.target.value = 'Português'; }
+        });
+      });
+
+      // mural de capas inclinado
+      const itens = D.videos;
+      const comCapa = itens.filter(v => v.mostrarTitulo === false);
+      const mural = comCapa.length >= 4 ? comCapa : itens;
+      let wall = '';
+      for (let i = 0; i < 110; i++) {
+        const lin = Math.floor(i / 10), col = i % 10;
+        const it = mural[(col * 3 + lin * 4) % mural.length];
+        wall += `<div class="lp-tile">${B.midia(it, { video: false })}${B.tArt(it)}</div>`;
+      }
+      document.getElementById('wall').innerHTML = wall;
+
+      // em alta
+      const alta = itens.filter(v => v.top10).concat(itens.filter(v => !v.top10)).slice(0, 10);
+      document.getElementById('trend').innerHTML = alta.map((it, i) =>
+        `<div class="lp-ti" title="${B.esc(it.titulo)}"><div class="poster">${B.midia(it, { poster: true, video: false })}${B.tArt(it)}</div><span class="num">${i + 1}</span></div>`).join('');
+      document.getElementById('trend').addEventListener('click', e => {
+        if (e.target.closest('.lp-ti')) B.toast('Entre para assistir ❤');
+      });
+
+      // saiba mais
+      document.getElementById('saibaMais').addEventListener('click', () => {
+        B.dialogo(`
+          <div class="heart">${B.icon('heart')}</div>
+          <h2>Feito com amor e carinho por ${B.esc(D.autor)}</h2>
+          <p>Para a ${B.esc(D.homenageada)}, em comemoração aos nossos ${anos} anos de namoro.</p>
+          <p>${dias.toLocaleString('pt-BR')} dias juntos e contando… ❤</p>
+          <span class="logo" data-logo></span>`);
+        B.montarLogos();
+      });
+
+      document.getElementById('footLinks').addEventListener('click', e => {
+        if (e.target.tagName === 'A') B.toast('A resposta para tudo é: eu te amo ❤');
+      });
+    })();
+  </script>
+</body>
+</html>

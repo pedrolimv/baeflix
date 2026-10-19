@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Baeflix</title>
+  <link rel="icon" type="image/svg+xml" href="imagens/logo/baeflix-b.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/estilo.css">
+</head>
+<body class="pg-login">
+
+  <div class="lg-top">
+    <header class="lg-header">
+      <div class="container"><a href="index.html" class="logo lg" data-logo></a></div>
+    </header>
+
+    <main class="lg-main">
+      <div class="lg-box">
+
+        <!-- passo 1: email ou celular -->
+        <form id="fEmail" novalidate>
+          <h1>Informe seus dados para entrar</h1>
+          <p class="sub">Ou peça um convite ao Pedro.</p>
+          <div class="field" id="fieldEmail">
+            <input id="email" type="text" placeholder=" " autocomplete="username" inputmode="email" autofocus>
+            <label for="email">Email ou número de celular</label>
+          </div>
+          <div class="err-msg" id="errEmail" hidden></div>
+          <button class="btn-red block" type="submit">Continuar</button>
+        </form>
+
+        <!-- passo 2: senha -->
+        <form id="fSenha" novalidate hidden>
+          <h1>Insira sua senha</h1>
+          <p class="who"><span id="quem"></span><button type="button" id="editar">Editar</button></p>
+          <div class="field has-eye" id="fieldSenha">
+            <input id="senha" type="password" placeholder=" " autocomplete="current-password">
+            <label for="senha">Senha</label>
+            <button type="button" class="eye" id="eye" aria-label="Mostrar senha"></button>
+          </div>
+          <div class="err-msg" id="errSenha" hidden></div>
+          <button class="btn-red block" type="submit" id="btnEntrar">Entrar</button>
+          <button class="btn-gray block" type="button" id="esqueci">Esqueceu a senha?</button>
+        </form>
+
+        <div class="ajuda" id="ajuda">
+          <button type="button" class="ajuda-btn" id="ajudaBtn">Ajuda <span id="chev"></span></button>
+          <div class="ajuda-box">
+            <a id="dica">Esqueceu o email ou o celular?</a>
+            <a id="dica2">Qual é a senha?</a>
+          </div>
+        </div>
+
+        <p class="captcha">Esta página é protegida pelo coração do Pedro para garantir que você é mesmo a Bae.</p>
+      </div>
+    </main>
+  </div>
+
+  <footer class="lg-footer">
+    <div class="site-footer container">
+      <p class="q">Dúvidas? Fale com o Pedro (atendimento 24h, beijo incluso)</p>
+      <div class="foot-links" id="footLinks">
+        <a>Perguntas frequentes</a><a>Central de Ajuda</a><a>Termos de Uso</a><a>Privacidade</a>
+        <a>Preferências de cookies</a><a>Informações corporativas</a>
+      </div>
+      <label class="lang" id="langFoot"></label>
+    </div>
+  </footer>
+
+  <script src="js/dados.js"></script>
+  <script src="js/comum.js"></script>
+  <script>
+    (function () {
+      const D = BAEFLIX, B = Baeflix, A = D.acesso || {};
+      const $ = id => document.getElementById(id);
+      const fEmail = $('fEmail'), fSenha = $('fSenha');
+      const digitos = s => String(s).replace(/\D/g, '');
+
+      function erro(field, box, msg) {
+        $(field).classList.toggle('err', !!msg);
+        $(box).hidden = !msg;
+        $(box).innerHTML = msg ? `${B.icon('err')}<span>${msg}</span>` : '';
+      }
+      function contaValida(v) {
+        v = v.trim();
+        if (!v) return false;
+        const contas = A.contas || [];
+        if (v.includes('@')) return contas.includes(B.sha256('baeflix|email|' + v.toLowerCase()));
+        // celular: aceita com ou sem +55, parênteses e traços (compara DDD + número)
+        const d = digitos(v);
+        return d.length >= 11 && contas.includes(B.sha256('baeflix|tel|' + d.slice(-11)));
+      }
+
+      fEmail.addEventListener('submit', e => {
+        e.preventDefault();
+        const v = $('email').value;
+        if (!v.trim()) return erro('fieldEmail', 'errEmail', 'Informe um email ou número de celular válido.');
+        if (!contaValida(v)) return erro('fieldEmail', 'errEmail', 'Não encontramos uma conta com esse email ou número. Essa Baeflix é exclusiva da Bae ❤');
+        erro('fieldEmail', 'errEmail', '');
+        $('quem').textContent = v.trim();
+        fEmail.hidden = true; fSenha.hidden = false;
+        $('senha').focus();
+      });
+      $('email').addEventListener('input', () => erro('fieldEmail', 'errEmail', ''));
+      $('senha').addEventListener('input', () => erro('fieldSenha', 'errSenha', ''));
+
+      $('editar').addEventListener('click', () => {
+        fSenha.hidden = true; fEmail.hidden = false;
+        $('senha').value = ''; erro('fieldSenha', 'errSenha', '');
+        $('email').focus();
+      });
+
+      // mostrar/ocultar senha
+      const eye = $('eye');
+      eye.innerHTML = B.icon('eye');
+      eye.addEventListener('click', () => {
+        const s = $('senha'), show = s.type === 'password';
+        s.type = show ? 'text' : 'password';
+        eye.innerHTML = B.icon(show ? 'eyeOff' : 'eye');
+        eye.setAttribute('aria-label', show ? 'Ocultar senha' : 'Mostrar senha');
+      });
+
+      fSenha.addEventListener('submit', e => {
+        e.preventDefault();
+        const s = $('senha').value.trim();
+        if (!s) return erro('fieldSenha', 'errSenha', 'Informe sua senha.');
+        if (B.sha256('baeflix|senha|' + s.toUpperCase()) !== A.senha) {
+          return erro('fieldSenha', 'errSenha', 'Senha incorreta. Tente novamente ou clique em "Esqueceu a senha?" para uma dica.');
+        }
+        erro('fieldSenha', 'errSenha', '');
+        const btn = $('btnEntrar');
+        btn.innerHTML = '<span class="spin"></span>';
+        btn.disabled = true;
+        B.store.set('logado', true);
+        B.store.del('perfil');
+        setTimeout(() => location.href = 'perfis.html', 700);
+      });
+
+      const dicaSenha = () => B.dialogo(`<div class="heart">${B.icon('heart')}</div><h2>Dica da senha</h2><p>Nossas iniciais (maiúsculas) + o dia em que tudo começou (ddmmaa).</p>`);
+      $('esqueci').addEventListener('click', dicaSenha);
+      $('dica2').addEventListener('click', dicaSenha);
+      $('dica').addEventListener('click', () => B.dialogo(`<div class="heart">${B.icon('heart')}</div><h2>É você, Bae?</h2><p>Use o seu email ou o seu número de celular.</p>`));
+
+      $('chev').innerHTML = B.icon('chevDown');
+      $('ajudaBtn').addEventListener('click', () => $('ajuda').classList.toggle('open'));
+
+      const lang = $('langFoot');
+      lang.innerHTML = `${B.icon('lang')}<select aria-label="Idioma"><option>Português</option><option>English</option></select>${B.icon('caret', 'caret')}`;
+      lang.querySelector('select').addEventListener('change', e => { B.toast('Aqui só se fala a língua do amor ❤'); e.target.value = 'Português'; });
+      $('footLinks').addEventListener('click', e => { if (e.target.tagName === 'A') B.toast('A resposta para tudo é: eu te amo ❤'); });
+    })();
+  </script>
+</body>
+</html>

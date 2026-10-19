@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Baeflix</title>
+  <link rel="icon" type="image/svg+xml" href="imagens/logo/baeflix-b.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/estilo.css">
+</head>
+<body class="pg-perfis">
+  <header class="pf-header"><a href="index.html" class="logo" data-logo></a></header>
+
+  <main class="pf-main">
+    <h1>Quem está assistindo?</h1>
+    <ul class="pf-list" id="lista"></ul>
+    <button class="pf-manage" id="gerenciar"></button>
+  </main>
+
+  <script src="js/dados.js"></script>
+  <script src="js/comum.js"></script>
+  <script>
+    (function () {
+      const D = BAEFLIX, B = Baeflix;
+      if (B.store.ok && !B.logado()) { location.replace('login.html'); return; }
+
+      const lista = document.getElementById('lista');
+      lista.innerHTML = D.perfis.map(p => `
+        <li class="pf-item" tabindex="0" data-id="${B.esc(p.id)}">
+          <div class="pf-av" style="${B.avatarStyle(p)}"></div>
+          <div class="pf-name">${B.esc(p.nome)}</div>
+        </li>`).join('');
+
+      function escolher(id) {
+        const p = D.perfis.find(x => x.id === id);
+        if (!p) return;
+        B.store.set('perfil', id);
+        const ov = document.createElement('div');
+        ov.className = 'pf-loading';
+        ov.innerHTML = `<div class="ring"></div><div class="pf-av" style="${B.avatarStyle(p)}"></div>`;
+        document.body.appendChild(ov);
+        setTimeout(() => location.href = 'inicio.html', 900);
+      }
+      lista.addEventListener('click', e => { const li = e.target.closest('.pf-item'); if (li) escolher(li.dataset.id); });
+      lista.addEventListener('keydown', e => { const li = e.target.closest('.pf-item'); if (li && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); escolher(li.dataset.id); } });
+
+      const g = document.getElementById('gerenciar');
+      g.innerHTML = `${B.icon('pencil')}Gerenciar perfis`;
+      g.addEventListener('click', () => B.toast('Só cabem dois perfis aqui: o seu e o meu ❤'));
+    })();
+  </script>
+</body>
+</html>
